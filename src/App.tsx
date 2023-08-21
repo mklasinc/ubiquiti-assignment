@@ -21,19 +21,20 @@ function FloorPlan() {
   }, [model])
   return (
     <primitive object={model.scene}>
-      <meshStandardMaterial color="white" />
+      <meshStandardMaterial color="red" />
     </primitive>
   )
 }
 
 function App() {
   return (
-    <Canvas>
-      <PerspectiveCamera makeDefault position={[0, 10, 30]} />
+    <Canvas camera={{ position: [5, 15, 40], zoom: 2 }}>
+      {/* <PerspectiveCamera position={} /> */}
       <ambientLight intensity={0.3} color={'blue'} />
       <color attach="background" args={['#E2EDF3']} />
 
       <OrbitControls
+        makeDefault
         autoRotate={false}
         zoomSpeed={0.25}
         minZoom={40}
@@ -52,9 +53,9 @@ function App() {
       </mesh> */}
 
       <Suspense fallback={null}>
-        {/* <Bounds fit clip margin={1.2}> */}
-        <FloorPlan />
-        {/* </Bounds> */}
+        <Bounds fit clip observe margin={1.1}>
+          <FloorPlan />
+        </Bounds>
       </Suspense>
     </Canvas>
   )
