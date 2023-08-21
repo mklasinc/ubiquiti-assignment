@@ -31,6 +31,7 @@ function App() {
     <Canvas camera={{ position: [5, 15, 40], zoom: 2 }}>
       {/* <PerspectiveCamera position={} /> */}
       <ambientLight intensity={0.3} color={'blue'} />
+      <fog attach="fog" args={['#E2EDF3', 50, 100]} />
       <color attach="background" args={['#E2EDF3']} />
 
       <OrbitControls
@@ -46,6 +47,7 @@ function App() {
       />
 
       <Environment preset="city" />
+      <gridHelper args={[200, 200, '#C5D6DB', '#C5D6DB']} position={[0, 0, 0]} />
 
       {/* <mesh>
         <boxGeometry args={[1, 1, 1]} />
