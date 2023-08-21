@@ -28,8 +28,6 @@ function FloorPlan() {
       }
     })
 
-    console.log(model.scene.children)
-
     for (let i = 0; i < meshesToRemove.length; i++) {
       let obj = meshesToRemove[i]
 
@@ -108,11 +106,6 @@ function App() {
         <Environment preset="city" />
         <gridHelper args={[200, 200, '#C5D6DB', '#C5D6DB']} position={[0, 0, 0]} />
 
-        {/* <mesh>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="hotpink" />
-      </mesh> */}
-
         <Suspense fallback={null}>
           <Bounds fit clip observe margin={1.1}>
             <FloorPlan />
@@ -120,6 +113,7 @@ function App() {
         </Suspense>
       </Canvas>
       <div
+        className="text-3xl font-bold underline"
         style={{
           position: 'absolute',
           top: 0,
