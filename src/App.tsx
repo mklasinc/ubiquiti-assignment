@@ -158,11 +158,15 @@ function Tracker() {
 }
 
 function App() {
+  const wrapperRef = useRef<any>()
   const hovered = useStore((state) => state.hovered)
 
   return (
-    <>
+    <div ref={wrapperRef} className="wrapper">
       <Canvas
+        className="pointer-events-none"
+        eventSource={wrapperRef}
+        eventPrefix="client"
         camera={{ position: [0, 15, 40], zoom: 2 }}
         onCreated={({ camera, raycaster }) => {
           camera.layers.enableAll()
@@ -199,17 +203,36 @@ function App() {
           </Bounds>
         </Suspense>
       </Canvas>
-      <div
-        className="text-3xl font-bold underline"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-        }}
-      >
-        {hovered ? hovered?.name : 'Nothing hovered'}
+
+      <div className="overlay p-4 w-full h-full absolute top-0 left-0">
+        <div
+          className="side-panel p-4 top-0 left-0 h-full w-[300px] bg-white rounded-lg"
+          style={{
+            boxShadow: '0px 4px 30px 0px rgba(170, 166, 166, 0.25)',
+          }}
+        ></div>
+        <div
+          className="text-3xl font-bold underline absolute top-0 left-0 m-4"
+          // style={{
+          //   position: 'absolute',
+          //   top: 0,
+          //   left: 0,
+          // }}
+        >
+          {hovered ? hovered?.name : 'Nothing hovered'}
+        </div>
+        <div
+          className="cursor-pointer dock absolute bottom-4 left-[50%] translate-x-[-50%] w-[80px] h-[80px] bg-white rounded-2xl p-2"
+          style={{
+            boxShadow: '0px 4px 30px 0px rgba(170, 166, 166, 0.25)',
+          }}
+        >
+          <div className="opacity-[0.5] w-full h-full bg-blue-500 rounded-lg">
+            <img src="/device-icon.png" />
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   )
 }
 
