@@ -1,6 +1,7 @@
 import { useStore } from '@/store'
 import cx from 'clsx'
 import { TrashIcon, PencilIcon, EyeSlashIcon, FlagIcon, LightBulbIcon, PlusIcon } from '@heroicons/react/24/outline'
+import { Leva, useControls, button } from 'leva'
 
 export const UI = () => {
   const hovered = useStore((state) => state.hovered)
@@ -8,6 +9,34 @@ export const UI = () => {
   const removeDevice = useStore((state) => state.removeDevice)
   const devices = useStore((state) => state.devices)
   const isPlacementToolActive = useStore((state) => state.isPlacementToolActive)
+
+  useControls({
+    day: {
+      value: 1,
+      options: {
+        1: 1,
+        2: 2,
+        3: 3,
+        4: 4,
+        5: 5,
+      },
+      //   onChange: (value) => {
+      //     intendedDay.current = Number(value)
+
+      //     const eventsInMemorySorted = get().events.sort((a, b) => a.timestamp - b.timestamp)
+      //     const eventsInStorageSorted = get().eventsDataInStorage.sort((a, b) => a.timestamp - b.timestamp)
+
+      //     if (!equals(eventsInMemorySorted, eventsInStorageSorted)) {
+      //       setShowSaveModal(true)
+      //       return
+      //     }
+      //     setDay(Number(value))
+      //   },
+    },
+    save: button(() => {
+      console.log('save')
+    }),
+  })
 
   return (
     <div className="overlay p-4 w-full h-full absolute top-0 left-0">
@@ -17,15 +46,38 @@ export const UI = () => {
           boxShadow: '0px 4px 30px 0px rgba(170, 166, 166, 0.25)',
         }}
       >
-        <div className="w-full flex justify-between items-center border-b border-white/10">
+        <div className="relative h-[200px] w-full">
+          <div className="py-2 w-full flex justify-between items-center border-b border-black/10">
+            <h2 className="uppercase font-bold text-s tracking-wides">Settings</h2>
+          </div>
+          <Leva
+            neverHide
+            fill
+            flat
+            titleBar={false}
+            theme={{
+              colors: {
+                elevation1: 'transparent',
+                elevation2: 'transparent',
+                elevation3: 'rgba(255, 255, 255, 0.1)',
+              },
+              sizes: {
+                rootWidth: '100%',
+              },
+            }}
+          />
+        </div>
+
+        <div className="py-2 w-full flex justify-between items-center border-b border-black/10">
           <h2 className="uppercase font-bold text-s tracking-wides">Devices</h2>
         </div>
-        <div className="overflow-y-auto h-[calc(100%-4rem)]">
+        <div className=" overflow-y-auto h-[calc(100%-4rem)]">
+          {devices.length === 0 && <div className="font-normal text-xs text-gray-400 truncate mt-2">No devices</div>}
           {devices.map((device) => (
             <div key={device.id} className="flex items-center justify-between my-2">
               <div className="flex items-center justify-center overflow-hidden">
-                <div className="font-medium text-sm mr-2">{device.name}</div>
-                <div className="font-medium text-xs text-gray-300 truncate mt-[2px]">{device.id}</div>
+                <div className="font-bold text-xs mr-2">{device.name}</div>
+                <div className="font-normal text-xs text-gray-400 truncate mt-[1px]">{device.id}</div>
               </div>
               <div className="pl-2">
                 <button
