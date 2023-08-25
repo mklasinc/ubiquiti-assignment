@@ -96,7 +96,7 @@ export const UI = () => {
         {hovered ? hovered?.name : 'Nothing hovered'}
       </div>
       <div
-        className="placement-tool cursor-pointer absolute bottom-4 left-[50%] translate-x-[-50%] w-[80px] h-[80px] bg-white rounded-2xl p-2"
+        className="placement-tool cursor-pointer absolute bottom-4 left-[50%] translate-x-[-50%] w-[64px] h-[64px] bg-white rounded-2xl p-2"
         style={{
           boxShadow: '0px 4px 30px 0px rgba(170, 166, 166, 0.25)',
         }}

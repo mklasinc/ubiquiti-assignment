@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import { useStore } from '@/store'
 import { Device } from './Device'
 import { DEVICE_SCALE } from '@/constants'
+import { useTexture } from '@react-three/drei'
 
 export function PlacementTool() {
   const pointerRef = useRef<any>()
@@ -13,6 +14,8 @@ export function PlacementTool() {
   const hovered = useStore((state) => state.hovered)
 
   const canPlaceDevice = hovered?.userData?.type === 'wall'
+
+  const markerTexture = useTexture('/selection-area-marker.png')
 
   useEffect(() => {
     const unsub1 = useStore.subscribe(
@@ -51,15 +54,24 @@ export function PlacementTool() {
     }
   }, [])
 
+  useEffect(() => {
+    if (isPlacementToolActive) {
+      document.body.style.cursor = 'none'
+    } else {
+      document.body.style.cursor = 'auto'
+    }
+  }, [isPlacementToolActive])
+
   return (
     <>
       <group ref={pointerRef} visible={isPlacementToolActive}>
-        <mesh>
+        <mesh scale={1}>
           <planeGeometry args={[1, 1]} />
           <meshStandardMaterial
             color={canPlaceDevice ? 'blue' : 'red'}
+            map={markerTexture}
             transparent
-            opacity={0.4}
+            opacity={0.8}
             side={THREE.DoubleSide}
           />
         </mesh>

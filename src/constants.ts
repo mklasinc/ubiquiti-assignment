@@ -1,1 +1,1 @@
-export const DEVICE_SCALE = 0.05
+export const DEVICE_SCALE = 0.025
