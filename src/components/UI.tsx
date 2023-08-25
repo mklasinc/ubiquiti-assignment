@@ -1,5 +1,6 @@
 import { useStore } from '@/store'
 import cx from 'clsx'
+import { TrashIcon, PencilIcon, EyeSlashIcon, FlagIcon, LightBulbIcon, PlusIcon } from '@heroicons/react/24/outline'
 
 export const UI = () => {
   const hovered = useStore((state) => state.hovered)
@@ -16,16 +17,23 @@ export const UI = () => {
           boxShadow: '0px 4px 30px 0px rgba(170, 166, 166, 0.25)',
         }}
       >
-        <div className="text-3xl font-bold">Devices</div>
+        <div className="w-full flex justify-between items-center border-b border-white/10">
+          <h2 className="uppercase font-bold text-s tracking-wides">Devices</h2>
+        </div>
         <div className="overflow-y-auto h-[calc(100%-4rem)]">
           {devices.map((device) => (
             <div key={device.id} className="flex items-center justify-between my-2">
-              <div className="flex items-center">
-                <div className="w-[40px] h-[40px] bg-gray-200 rounded-lg mr-2"></div>
-                <div className="text-lg">{device.name}</div>
+              <div className="flex items-center justify-center overflow-hidden">
+                <div className="font-medium text-sm mr-2">{device.name}</div>
+                <div className="font-medium text-xs text-gray-300 truncate mt-[2px]">{device.id}</div>
               </div>
-              <div onClick={() => removeDevice(device.id)} className="text-lg cursor-pointer hover:bg-red-500">
-                🗑
+              <div className="pl-2">
+                <button
+                  className="item-delete-btn rounded p-1 hover:bg-red-500 transition-colors"
+                  onClick={() => removeDevice(device.id)}
+                >
+                  <TrashIcon className="w-4 h-4 text-red-500 opacity-80 hover:opacity-100 hover:text-white" />
+                </button>
               </div>
             </div>
           ))}
