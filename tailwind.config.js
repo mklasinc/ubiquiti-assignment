@@ -2,7 +2,13 @@
 export default {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        error: '#ff0000',
+        active: '#006fff',
+        hover: '#4D9AFE',
+      },
+    },
   },
   plugins: [],
 }

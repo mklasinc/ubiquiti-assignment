@@ -21,3 +21,14 @@ canvas {
   padding: 0;
   overflow: hidden;
 }
+
+/**
+  * Placement Tool
+  */
+.placement-tool-icon {
+  transition: transform 0.1s ease-in-out;
+}
+
+.placement-tool:hover .placement-tool-icon {
+  transform: scale(1.1);
+}
