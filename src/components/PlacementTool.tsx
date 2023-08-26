@@ -17,7 +17,6 @@ export function PlacementTool({ debug = false }) {
   const deviceRef = useRef<any>()
 
   const isPlacementToolActive = useStore((state) => state.isPlacementToolActive)
-  const isDraggingToolActive = useStore((state) => state.isDraggingToolActive)
   const hovered = useStore((state) => state.hovered)
   const camera = useThree((state) => state.camera)
 

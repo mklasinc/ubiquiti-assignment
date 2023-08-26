@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { useCursor, useGLTF, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 import { useStore } from '@/store'
@@ -103,25 +103,27 @@ export function Devices({ data }: { data: DeviceData[] }) {
 
   return (
     // <Instances range={data.length} material={materials.base} geometry={nodes.Scene}>
-    <group position={[0, 0, 0]}>
-      {data.map((device, i) => (
-        <DeviceInstance
-          key={device.id}
-          data={device}
-          interactable={!isPlacementToolActive}
-          onClick={() => {
-            removeDevice(device.id)
-          }}
-        />
-        // <group key={device.id} matrixWorld={device.matrix} matrixAutoUpdate={false}>
-        //   {/* <Instance /> */}
-        //   <Device />
-        //   {/* <mesh>
-        //     <boxGeometry args={[0.3, 0.3, 0.3]} />
-        //   </mesh> */}
-        // </group>
-      ))}
-    </group>
+    <Suspense fallback={null}>
+      <group position={[0, 0, 0]}>
+        {data.map((device, i) => (
+          <DeviceInstance
+            key={device.id}
+            data={device}
+            interactable={!isPlacementToolActive}
+            onClick={() => {
+              removeDevice(device.id)
+            }}
+          />
+          // <group key={device.id} matrixWorld={device.matrix} matrixAutoUpdate={false}>
+          //   {/* <Instance /> */}
+          //   <Device />
+          //   {/* <mesh>
+          //     <boxGeometry args={[0.3, 0.3, 0.3]} />
+          //   </mesh> */}
+          // </group>
+        ))}
+      </group>
+    </Suspense>
     // </Instances>
   )
 }
