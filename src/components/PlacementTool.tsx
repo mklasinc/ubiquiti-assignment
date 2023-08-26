@@ -6,6 +6,11 @@ import { DEVICE_SCALE } from '@/constants'
 import { useTexture } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
 
+const COLORS = {
+  ACTIVE: new THREE.Color('#82d3f5').multiplyScalar(10),
+  ERROR: new THREE.Color('#FF0000'),
+}
+
 export function PlacementTool({ debug = false }) {
   const pointerRef = useRef<any>()
   const debugPointerRef = useRef<any>()
@@ -78,11 +83,12 @@ export function PlacementTool({ debug = false }) {
         <mesh scale={1}>
           <planeGeometry args={[1, 1]} />
           <meshStandardMaterial
-            color={canPlaceDevice ? 'blue' : 'red'}
+            color={canPlaceDevice ? COLORS.ACTIVE : COLORS.ERROR}
             map={markerTexture}
             transparent
             opacity={0.8}
             side={THREE.DoubleSide}
+            toneMapped={false}
           />
         </mesh>
         <Device ref={deviceRef} scale={DEVICE_SCALE} />
