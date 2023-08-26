@@ -6,7 +6,7 @@ import { noop } from '@/utils/noop'
 import type { DeviceData } from '@/store'
 
 export const UI = ({ debug = false }: { debug: boolean }) => {
-  const hovered = useStore((state) => state.hovered)
+  const raycasterTarget = useStore((state) => state.raycasterTarget)
   const setIsPlacementToolActive = useStore((state) => state.setIsPlacementToolActive)
   const removeDevice = useStore((state) => state.removeDevice)
   const devices = useStore((state) => state.devices)
@@ -74,7 +74,7 @@ export const UI = ({ debug = false }: { debug: boolean }) => {
 
       {debug && (
         <div className="debug-ui text-3xl font-bold underline absolute right-0 top-0 m-4">
-          <div>{hovered ? hovered?.name : 'Nothing hovered'}</div>
+          <div>{raycasterTarget ? raycasterTarget?.name : 'Nothing hovered'}</div>
 
           <div>Dragging tool: {isDraggingToolActive ? 'yes' : 'no'}</div>
           {/* <div>{activeDevice ? activeDevice?.name : 'Nothing active'}</div> */}
@@ -118,7 +118,7 @@ function DeviceItem({
     <div
       onClick={onClick}
       className={cx(
-        'flex items-center justify-between my-2 p-2 rounded-md bg-transparent cursor-pointer transition-colors ',
+        'flex items-center justify-between my-2 p-2 rounded-md cursor-pointer transition-colors ',
         isActive && 'bg-[#9e9e9e]/20'
       )}
     >

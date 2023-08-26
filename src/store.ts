@@ -6,9 +6,14 @@ interface State {
   get: () => State
   set: (state: Partial<State>) => void
 
-  hovered: Object3D | null
-  hoveredNormal: Vector3 | null
-  hoveredPosition: Vector3 | null
+  raycasterTarget: Object3D | null
+  setRaycasterTarget: (value: Object3D | null) => void
+
+  raycasterEvent: {
+    normal: Vector3
+    position: Vector3
+  } | null
+  setRaycasterEvent: (event: { normal: Vector3; position: Vector3 } | null) => void
 
   isPlacementToolActive: boolean
   setIsPlacementToolActive: (value: boolean) => void
@@ -52,16 +57,17 @@ export const useStore = create<State>()(
     activeDevice: null,
     setActiveDevice: (device: DeviceData | null) => set({ activeDevice: device }),
 
-    hovered: null,
-    hoveredNormal: null,
-    hoveredPosition: null,
+    raycasterTarget: null,
+    setRaycasterTarget: (value: Object3D | null) => set({ raycasterTarget: value }),
+
+    raycasterEvent: null,
+    setRaycasterEvent: (event: { normal: Vector3; position: Vector3 } | null) => set({ raycasterEvent: event }),
 
     addDevice: (device: DeviceData) => {
       const { devices } = get()
       set({ devices: [...devices, device] })
     },
     removeDevice: (id: string) => {
-      console.log('removeDevice', id)
       const deviceIndex = get().devices.findIndex((device) => device.id === id)
       if (deviceIndex === -1) return
       const oldList = get().devices

@@ -18,33 +18,32 @@ export function PlacementTool({ debug = false, render }: { debug?: boolean; rend
   const deviceRef = useRef<any>()
 
   const isPlacementToolActive = useStore((state) => state.isPlacementToolActive)
+  const setIsPlacementToolActive = useStore((state) => state.setIsPlacementToolActive)
+  const setRaycasterTarget = useStore((state) => state.setRaycasterTarget)
+  const setRaycasterEvent = useStore((state) => state.setRaycasterEvent)
+  const raycasterTarget = useStore((state) => state.raycasterTarget)
   const addDevice = useStore((state) => state.addDevice)
-  const storeSet = useStore((state) => state.set)
-  const hovered = useStore((state) => state.hovered)
   const camera = useThree((state) => state.camera)
 
-  const canPlaceDevice = hovered?.userData?.type === 'wall'
+  const canPlaceDevice = raycasterTarget?.userData?.type === 'wall'
 
   const markerTexture = useTexture('/selection-area-marker.png')
 
   useEffect(() => {
     const unsub1 = useStore.subscribe(
-      (state) => [state.hovered, state.hoveredNormal],
-      ([hovered]) => {
-        const hoveredObject = hovered as THREE.Object3D
-        if (!hoveredObject) return
-        // Create a Quaternion representing the rotation
-        const worldQuaternion = hoveredObject.getWorldQuaternion(new THREE.Quaternion())
+      (state) => state.raycasterTarget,
+      (raycasterTarget) => {
+        if (!raycasterTarget) return
 
-        // Apply the rotation to the object
-        pointerRef.current.setRotationFromQuaternion(worldQuaternion)
+        const raycasterTargetWorldQuaternion = raycasterTarget.getWorldQuaternion(new THREE.Quaternion())
+        pointerRef.current.setRotationFromQuaternion(raycasterTargetWorldQuaternion)
 
-        const hoveredObjectWorldDirection = hoveredObject.getWorldDirection(new THREE.Vector3())
+        const raycasterTargetWorldDirection = raycasterTarget.getWorldDirection(new THREE.Vector3())
         const cameraDirection = camera.getWorldDirection(new THREE.Vector3())
+        const dotProduct = cameraDirection.dot(raycasterTargetWorldDirection)
 
-        // Calculate the dot product between the camera direction and the test vector
-        const dotProduct = cameraDirection.dot(hoveredObjectWorldDirection)
         const isObjectFacingCamera = dotProduct <= 0
+
         if (!isObjectFacingCamera) {
           const adjustedQuaternion = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI)
           pointerRef.current.quaternion.multiply(adjustedQuaternion)
@@ -53,9 +52,10 @@ export function PlacementTool({ debug = false, render }: { debug?: boolean; rend
     )
 
     const unsub2 = useStore.subscribe(
-      (state) => [state.hoveredPosition, state.hoveredNormal],
-      ([position, normal]) => {
-        if (!pointerRef.current || !position) return
+      (state) => state.raycasterEvent,
+      (raycasterEvent) => {
+        const { normal, position } = raycasterEvent ?? {}
+        if (!pointerRef.current || !position || !normal) return
         pointerRef.current.position.copy(position).addScaledVector(normal, 0.1)
         pointerRef.current.position.y += 0.01
 
@@ -82,18 +82,15 @@ export function PlacementTool({ debug = false, render }: { debug?: boolean; rend
   const handlePointerOver = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation()
 
-    storeSet({
-      hovered: e.object,
-      hoveredNormal: e.face!.normal,
-      hoveredPosition: e.point,
-    })
+    setRaycasterTarget(e.object)
+    setRaycasterEvent({ normal: e.face!.normal, position: e.point })
   }
 
   const handlePointerMove = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation()
 
     const directionVector = new THREE.Vector3().copy(e.unprojectedPoint).sub(e.point).normalize()
-    storeSet({ hoveredPosition: e.point.addScaledVector(directionVector, 0.2), hoveredNormal: e.normal })
+    setRaycasterEvent({ normal: e.normal!, position: e.point.addScaledVector(directionVector, 0.2) })
   }
 
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
@@ -123,7 +120,8 @@ export function PlacementTool({ debug = false, render }: { debug?: boolean; rend
         position: e.point,
         parentWorldMatrix: worldMatrix,
       })
-      storeSet({ isPlacementToolActive: false })
+      setIsPlacementToolActive(false)
+      // storeSet({ isPlacementToolActive: false })
     }
   }
 
