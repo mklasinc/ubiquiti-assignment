@@ -128,7 +128,7 @@ function DeviceItem({
       </div>
       <div className="pl-2">
         <button className="item-delete-btn rounded p-1 hover:bg-red-500 transition-colors" onClick={onRemove}>
-          <TrashIcon className="w-4 h-4 text-red-500 opacity-80 hover:opacity-100 hover:text-white" />
+          <TrashIcon className="item-delete-btn-icon w-4 h-4 text-red-500 opacity-80" />
         </button>
       </div>
     </div>

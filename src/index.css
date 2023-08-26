@@ -33,6 +33,16 @@ canvas {
   transform: scale(1.1);
 }
 
+/**
+  * UI
+  */
+.item-delete-btn:hover .item-delete-btn-icon {
+  color: white;
+}
+
+/**
+  * GUI
+  */
 .settings-container button {
   color: white !important;
 }
