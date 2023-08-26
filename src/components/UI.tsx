@@ -5,7 +5,7 @@ import { Leva } from 'leva'
 import { noop } from '@/utils/noop'
 import type { DeviceData } from '@/store'
 
-export const UI = () => {
+export const UI = ({ debug = false }: { debug: boolean }) => {
   const hovered = useStore((state) => state.hovered)
   const setIsPlacementToolActive = useStore((state) => state.setIsPlacementToolActive)
   const removeDevice = useStore((state) => state.removeDevice)
@@ -72,12 +72,15 @@ export const UI = () => {
         </div>
       </div>
 
-      <div className="text-3xl font-bold underline absolute right-0 top-0 m-4">
-        <div>{hovered ? hovered?.name : 'Nothing hovered'}</div>
+      {debug && (
+        <div className="debug-ui text-3xl font-bold underline absolute right-0 top-0 m-4">
+          <div>{hovered ? hovered?.name : 'Nothing hovered'}</div>
 
-        <div>Dragging tool: {isDraggingToolActive ? 'yes' : 'no'}</div>
-        {/* <div>{activeDevice ? activeDevice?.name : 'Nothing active'}</div> */}
-      </div>
+          <div>Dragging tool: {isDraggingToolActive ? 'yes' : 'no'}</div>
+          {/* <div>{activeDevice ? activeDevice?.name : 'Nothing active'}</div> */}
+        </div>
+      )}
+
       <div
         className="placement-tool cursor-pointer absolute bottom-4 left-[50%] translate-x-[-50%] w-[64px] h-[64px] bg-white rounded-2xl p-2"
         style={{
