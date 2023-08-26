@@ -1,4 +1,4 @@
-export const DEVICE_SCALE = 0.025
+export const DEVICE_SCALE = 0.02
 
 export const CAMERA_DEFAULT_POSITION = [15, 15, 30]
 export const CAMERA_DEFAULT_TARGET = [0, 0, 0]

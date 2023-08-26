@@ -5,7 +5,7 @@ export default {
     extend: {
       colors: {
         error: '#ff0000',
-        active: '#006fff',
+        active: '#82d3f5',
         hover: '#4D9AFE',
       },
     },

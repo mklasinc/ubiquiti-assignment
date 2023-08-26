@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useCursor, useGLTF } from '@react-three/drei'
+import { useCursor, useGLTF, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 import { useStore } from '@/store'
 import { Device } from '@/components/Device'
@@ -7,7 +7,6 @@ import type { DeviceData } from '@/store'
 import { DEVICE_SCALE } from '@/constants'
 import { useGesture } from '@use-gesture/react'
 import { useThree } from '@react-three/fiber'
-import type { CameraControls } from '@react-three/drei'
 
 export function DeviceInstance({
   data,
@@ -59,12 +58,13 @@ export function DeviceInstance({
         new THREE.Vector3(0, 0, data.position.z)
       )
       const aspect = getThree().size.width / currentViewport.width
-      console.log('aspect x', x, x / aspect)
       ref.current!.position.x = data.position.x + (x / aspect) * 0.3
       ref.current!.position.y = data.position.y - (y / aspect) * 0.3
-      // console.log('dragging', x, y, getThree().size.width, viewport.width)
     },
   })
+
+  const glowTexture = useTexture('/glow.png')
+  const color = new THREE.Color('#82d3f5').multiplyScalar(30)
 
   return (
     <group
@@ -87,6 +87,10 @@ export function DeviceInstance({
       }}
     >
       <Device />
+      <mesh position-z={0.1} scale={60}>
+        <planeGeometry args={[1, 1]} />
+        <meshStandardMaterial transparent map={glowTexture} toneMapped={false} color={color} depthWrite={false} />
+      </mesh>
     </group>
   )
 }
