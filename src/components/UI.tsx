@@ -120,7 +120,7 @@ function DeviceItem({
       )}
     >
       <div className="flex items-center justify-center overflow-hidden">
-        <div className="font-bold text-xs mr-2">{data.name}</div>
+        <div className="capitalize font-bold text-xs mr-2">{data.name}</div>
         <div className="font-normal text-xs text-gray-400 truncate mt-[1px]">{data.id}</div>
       </div>
       <div className="pl-2">

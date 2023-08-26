@@ -23,7 +23,6 @@ function App() {
         eventPrefix="client"
         camera={{ position: [...(CAMERA_DEFAULT_POSITION as [number, number, number])], zoom: 2 }}
       >
-        <PlacementTool />
         <ambientLight name="Ambient" intensity={AMBIENT_LIGHT_DEFAULT_INTENSITY} color={AMBIENT_LIGHT_DEFAULT_COLOR} />
         <fog attach="fog" args={['#E2EDF3', 60, 100]} />
         <color attach="background" args={['#E2EDF3']} />
@@ -31,10 +30,14 @@ function App() {
         <LightSettings />
         <Devices data={devices} />
         <Controls />
-        <Ground />
-        <Suspense fallback={null}>
-          <FloorPlan />
-        </Suspense>
+        <PlacementTool
+          render={(props) => (
+            <Suspense fallback={null}>
+              <Ground {...props} />
+              <FloorPlan {...props} />
+            </Suspense>
+          )}
+        />
       </Canvas>
 
       <UI />

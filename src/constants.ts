@@ -8,3 +8,10 @@ export const ENV_MAP_DEFAULT_INTENSITY = 0.6
 
 export const AMBIENT_LIGHT_DEFAULT_INTENSITY = 0.4
 export const AMBIENT_LIGHT_DEFAULT_COLOR = '#0000ff'
+
+export const LAYERS = {
+  FLOOORPLAN: 'floorplan',
+  WALL: 'wall',
+  GROUND: 'ground',
+  DEVICE: 'device',
+}

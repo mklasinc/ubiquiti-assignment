@@ -74,8 +74,6 @@ export function DeviceInstance({
       onPointerOver={(e) => setHovered(true)}
       onPointerOut={(e) => setHovered(false)}
       onPointerMissed={(e) => {
-        console.log('missed')
-        console.log(interactable)
         if (!interactable) return
         if (isActive) {
           setActiveDevice(null)
