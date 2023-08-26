@@ -6,7 +6,7 @@ import { Device } from '@/components/Device'
 import type { DeviceData } from '@/store'
 import { DEVICE_SCALE } from '@/constants'
 import { useGesture } from '@use-gesture/react'
-import { useThree } from '@react-three/fiber'
+import { ThreeEvent, useThree } from '@react-three/fiber'
 
 export function DeviceInstance({
   data,
@@ -66,24 +66,28 @@ export function DeviceInstance({
   const glowTexture = useTexture('/glow.png')
   const color = new THREE.Color('#82d3f5').multiplyScalar(30)
 
+  const handlePointerOver = () => setHovered(true)
+  const handlePointerOut = () => setHovered(false)
+  const handlePointerMissed = () => {
+    if (isActive) setActiveDevice(null)
+  }
+  const handleClick = (e: ThreeEvent<MouseEvent>) => {
+    e.stopPropagation()
+    setActiveDevice(data)
+  }
+
+  const pointerEvents = interactable
+    ? {
+        ...(bind() as any),
+        onPointerOver: handlePointerOver,
+        onPointerOut: handlePointerOut,
+        onPointerMissed: handlePointerMissed,
+        onClick: handleClick,
+      }
+    : {}
+
   return (
-    <group
-      ref={ref}
-      name={data.id}
-      {...(bind() as any)}
-      onPointerOver={(e) => setHovered(true)}
-      onPointerOut={(e) => setHovered(false)}
-      onPointerMissed={(e) => {
-        if (!interactable) return
-        if (isActive) {
-          setActiveDevice(null)
-        }
-      }}
-      onClick={(e) => {
-        e.stopPropagation()
-        setActiveDevice(data)
-      }}
-    >
+    <group ref={ref} name={data.id} {...pointerEvents}>
       <Device />
       <mesh position-z={0.1} scale={60}>
         <planeGeometry args={[1, 1]} />

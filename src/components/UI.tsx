@@ -56,6 +56,7 @@ export const UI = () => {
           {devices.length === 0 && <div className="font-normal text-xs text-gray-400 truncate mt-2">No devices</div>}
           {devices.map((device) => (
             <DeviceItem
+              key={device.id}
               data={device}
               onClick={() => {
                 console.log('click', device)
@@ -112,7 +113,6 @@ function DeviceItem({
 }) {
   return (
     <div
-      key={data.id}
       onClick={onClick}
       className={cx(
         'flex items-center justify-between my-2 p-2 rounded-md bg-transparent cursor-pointer transition-colors ',
