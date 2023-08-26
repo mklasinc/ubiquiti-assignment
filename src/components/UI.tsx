@@ -13,6 +13,7 @@ export const UI = ({ debug = false }: { debug: boolean }) => {
   const raycasterTarget = useStore((state) => state.raycasterTarget)
   const isDraggingToolActive = useStore((state) => state.isDraggingToolActive)
   const isPlacementToolActive = useStore((state) => state.isPlacementToolActive)
+  const hasInteractedWithPlacementTool = useStore((state) => state.hasInteractedWithPlacementTool)
   const setIsPlacementToolActive = useStore((state) => state.setIsPlacementToolActive)
 
   return (
@@ -78,22 +79,32 @@ export const UI = ({ debug = false }: { debug: boolean }) => {
         </div>
       )}
 
-      <div
-        className="placement-tool cursor-pointer absolute bottom-4 left-[50%] translate-x-[-50%] w-[64px] h-[64px] bg-white rounded-2xl p-2"
-        style={{
-          boxShadow: '0px 4px 30px 0px rgba(170, 166, 166, 0.25)',
-        }}
-      >
+      <div className="absolute bottom-4 left-[50%] translate-x-[-50%] flex flex-col items-center">
         <div
-          className={cx('opacity-[0.5] w-full h-full rounded-lg', {
-            'bg-active': isPlacementToolActive,
-            'bg-gray-200': !isPlacementToolActive,
-          })}
-          onClick={() => {
-            setIsPlacementToolActive(!isPlacementToolActive)
+          className={cx(
+            'bg-white rounded-lg p-3 text-black font-normal text-xs text-gray-400 pointer-events-none transition-opacity',
+            hasInteractedWithPlacementTool && 'opacity-0'
+          )}
+        >
+          TIP: Click on placement tool below to start adding devices
+        </div>
+        <div
+          className="placement-tool mt-2 cursor-pointer h-[64px] w-[64px] bg-white rounded-2xl p-2"
+          style={{
+            boxShadow: '0px 4px 30px 0px rgba(170, 166, 166, 0.25)',
           }}
         >
-          <img className="placement-tool-icon" src="/device-icon.png" />
+          <div
+            className={cx('opacity-[0.5] w-full h-full rounded-lg', {
+              'bg-active': isPlacementToolActive,
+              'bg-gray-200': !isPlacementToolActive,
+            })}
+            onClick={() => {
+              setIsPlacementToolActive(!isPlacementToolActive)
+            }}
+          >
+            <img className="placement-tool-icon" src="/device-icon.png" />
+          </div>
         </div>
       </div>
     </div>

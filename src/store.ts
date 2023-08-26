@@ -17,6 +17,8 @@ interface State {
 
   isPlacementToolActive: boolean
   setIsPlacementToolActive: (value: boolean) => void
+  hasInteractedWithPlacementTool: boolean
+
   isDraggingToolActive: boolean
   setIsDraggingToolActive: (value: boolean) => void
   isUpdatingSettings: boolean
@@ -43,7 +45,9 @@ export const useStore = create<State>()(
     set,
 
     isPlacementToolActive: false,
-    setIsPlacementToolActive: (value: boolean) => set({ isPlacementToolActive: value, activeDevice: null }),
+    hasInteractedWithPlacementTool: false,
+    setIsPlacementToolActive: (value: boolean) =>
+      set({ isPlacementToolActive: value, activeDevice: null, hasInteractedWithPlacementTool: true }),
 
     isDraggingToolActive: false,
     setIsDraggingToolActive: (value: boolean) => set({ isDraggingToolActive: value }),
