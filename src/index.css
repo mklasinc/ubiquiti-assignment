@@ -32,3 +32,15 @@ canvas {
 .placement-tool:hover .placement-tool-icon {
   transform: scale(1.1);
 }
+
+.settings-container button {
+  color: white !important;
+}
+
+.leva-c-kWgxhW {
+  height: auto;
+}
+
+.leva-c-kWgxhW > div {
+  height: auto !important;
+}

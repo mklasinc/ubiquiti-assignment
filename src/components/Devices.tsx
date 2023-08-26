@@ -6,6 +6,8 @@ import { Device } from '@/components/Device'
 import type { DeviceData } from '@/store'
 import { DEVICE_SCALE } from '@/constants'
 import { useGesture } from '@use-gesture/react'
+import { useThree } from '@react-three/fiber'
+import type { CameraControls } from '@react-three/drei'
 
 export function DeviceInstance({
   data,
@@ -21,6 +23,10 @@ export function DeviceInstance({
   const updateDevice = useStore((state) => state.updateDevice)
   const storeSet = useStore((state) => state.set)
   const storeGet = useStore((state) => state.get)
+  const setActiveDevice = useStore((state) => state.setActiveDevice)
+  const activeDevice = useStore((state) => state.activeDevice)
+
+  const isActive = activeDevice?.id === data.id
 
   useCursor(hovered && interactable)
 
@@ -49,9 +55,22 @@ export function DeviceInstance({
   return (
     <group
       ref={ref}
-      {...(bind() as any)}
+      name={data.id}
+      // {...(bind() as any)}
       onPointerOver={(e) => setHovered(true)}
       onPointerOut={(e) => setHovered(false)}
+      onPointerMissed={(e) => {
+        console.log('missed')
+        console.log(interactable)
+        if (!interactable) return
+        if (isActive) {
+          setActiveDevice(null)
+        }
+      }}
+      onClick={(e) => {
+        e.stopPropagation()
+        setActiveDevice(data)
+      }}
     >
       <Device />
     </group>

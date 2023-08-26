@@ -5,7 +5,7 @@ import { Device } from './Device'
 import { DEVICE_SCALE } from '@/constants'
 import { useTexture } from '@react-three/drei'
 
-export function PlacementTool() {
+export function PlacementTool({ debug = false }) {
   const pointerRef = useRef<any>()
   const debugPointerRef = useRef<any>()
   const deviceRef = useRef<any>()
@@ -22,6 +22,7 @@ export function PlacementTool() {
       (state) => [state.hovered, state.hoveredNormal],
       ([hovered]) => {
         const hoveredObject = hovered as THREE.Object3D
+        if (!hoveredObject) return
         // Create a Quaternion representing the rotation
         const worldQuaternion = hoveredObject.getWorldQuaternion(new THREE.Quaternion())
 
@@ -38,7 +39,7 @@ export function PlacementTool() {
     const unsub2 = useStore.subscribe(
       (state) => [state.hoveredPosition, state.hoveredNormal],
       ([position, normal]) => {
-        if (!pointerRef.current) return
+        if (!pointerRef.current || !position) return
         pointerRef.current.position.copy(position).addScaledVector(normal, 0.1)
         pointerRef.current.position.y += 0.01
 
@@ -77,10 +78,12 @@ export function PlacementTool() {
         </mesh>
         <Device ref={deviceRef} scale={DEVICE_SCALE} />
       </group>
-      <mesh ref={debugPointerRef}>
-        <boxGeometry args={[0.1, 0.1, 0.01]} />
-        <meshStandardMaterial color={'red'} />
-      </mesh>
+      {debug && (
+        <mesh ref={debugPointerRef}>
+          <boxGeometry args={[0.1, 0.1, 0.01]} />
+          <meshStandardMaterial color={'red'} />
+        </mesh>
+      )}
     </>
   )
 }

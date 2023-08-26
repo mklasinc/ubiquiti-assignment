@@ -3,6 +3,7 @@ import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import { useStore } from '../store'
 import { v4 as uuidv4 } from 'uuid'
+import { ENV_MAP_DEFAULT_INTENSITY } from '@/constants'
 
 export function FloorPlan() {
   let model = useGLTF('floorplan.glb')
@@ -16,10 +17,12 @@ export function FloorPlan() {
 
     const meshesToRemove: THREE.Object3D[] = []
 
+    model.scene.name = 'Floorplan'
+
     model.scene.traverse((child) => {
       if (child.name.includes('Ceiling')) meshesToRemove.push(child)
       if (child instanceof THREE.Mesh) {
-        child.material.envMapIntensity = 0.6
+        child.material.envMapIntensity = ENV_MAP_DEFAULT_INTENSITY
         child.material.needsUpdate = true
       }
 

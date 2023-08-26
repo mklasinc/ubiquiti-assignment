@@ -5,15 +5,24 @@ import { subscribeWithSelector } from 'zustand/middleware'
 interface State {
   get: () => State
   set: (state: Partial<State>) => void
+
   hovered: Object3D | null
   hoveredNormal: Vector3 | null
   hoveredPosition: Vector3 | null
+
   isPlacementToolActive: boolean
+  setIsPlacementToolActive: (value: boolean) => void
   isDraggingToolActive: boolean
+  setIsDraggingToolActive: (value: boolean) => void
+  isUpdatingSettings: boolean
+  setIsUpdatingSettings: (value: boolean) => void
   devices: Array<DeviceData>
+  setDevices: (devices: Array<DeviceData>) => void
   addDevice: (device: DeviceData) => void
   removeDevice: (id: string) => void
   updateDevice: (id: string, data: Partial<DeviceData>) => void
+  activeDevice: DeviceData | null
+  setActiveDevice: (device: DeviceData | null) => void
 }
 
 export interface DeviceData {
@@ -25,14 +34,28 @@ export interface DeviceData {
 
 export const useStore = create<State>()(
   subscribeWithSelector((set, get) => ({
+    get,
+    set,
+
     isPlacementToolActive: false,
+    setIsPlacementToolActive: (value: boolean) => set({ isPlacementToolActive: value, activeDevice: null }),
+
     isDraggingToolActive: false,
+    setIsDraggingToolActive: (value: boolean) => set({ isDraggingToolActive: value }),
+
+    isUpdatingSettings: false,
+    setIsUpdatingSettings: (value: boolean) => set({ isUpdatingSettings: value }),
+
     devices: [],
+    setDevices: (devices: Array<DeviceData>) => set({ devices }),
+
+    activeDevice: null,
+    setActiveDevice: (device: DeviceData | null) => set({ activeDevice: device }),
+
     hovered: null,
     hoveredNormal: null,
     hoveredPosition: null,
-    get,
-    set,
+
     addDevice: (device: DeviceData) => {
       const { devices } = get()
       set({ devices: [...devices, device] })
