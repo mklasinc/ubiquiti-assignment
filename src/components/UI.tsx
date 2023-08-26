@@ -4,6 +4,7 @@ import { TrashIcon } from '@heroicons/react/24/outline'
 import { Leva } from 'leva'
 import { noop } from '@/utils/noop'
 import type { DeviceData } from '@/store'
+import type { MouseEventHandler } from 'react'
 
 export const UI = () => {
   const hovered = useStore((state) => state.hovered)
@@ -61,8 +62,9 @@ export const UI = () => {
                 setActiveDevice(device)
               }}
               isActive={activeDevice?.id === device.id}
-              onRemove={() => {
+              onRemove={(e) => {
                 removeDevice(device.id)
+                e.stopPropagation()
               }}
             />
           ))}
@@ -104,7 +106,7 @@ function DeviceItem({
   data: DeviceData
   onClick: () => void
   isActive: boolean
-  onRemove?: () => void
+  onRemove: (event: any) => void
 }) {
   return (
     <div

@@ -66,7 +66,7 @@ export const useStore = create<State>()(
       if (deviceIndex === -1) return
       const oldList = get().devices
       const newList = [...oldList.slice(0, deviceIndex), ...oldList.slice(deviceIndex + 1)]
-      set({ devices: newList })
+      set({ devices: newList, activeDevice: null })
     },
     updateDevice: (id: string, data: Partial<DeviceData>) => {
       const deviceIndex = get().devices.findIndex((device) => device.id === id)

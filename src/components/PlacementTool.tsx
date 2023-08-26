@@ -4,6 +4,7 @@ import { useStore } from '@/store'
 import { Device } from './Device'
 import { DEVICE_SCALE } from '@/constants'
 import { useTexture } from '@react-three/drei'
+import { useThree } from '@react-three/fiber'
 
 export function PlacementTool({ debug = false }) {
   const pointerRef = useRef<any>()
@@ -12,6 +13,7 @@ export function PlacementTool({ debug = false }) {
 
   const isPlacementToolActive = useStore((state) => state.isPlacementToolActive)
   const hovered = useStore((state) => state.hovered)
+  const camera = useThree((state) => state.camera)
 
   const canPlaceDevice = hovered?.userData?.type === 'wall'
 
@@ -29,9 +31,15 @@ export function PlacementTool({ debug = false }) {
         // Apply the rotation to the object
         pointerRef.current.setRotationFromQuaternion(worldQuaternion)
 
-        // Rotate the tracker to be flat on the floor
-        if (hoveredObject.name.includes('Floor')) {
-          pointerRef.current.setRotationFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI * 0.5)
+        const hoveredObjectWorldDirection = hoveredObject.getWorldDirection(new THREE.Vector3())
+        const cameraDirection = camera.getWorldDirection(new THREE.Vector3())
+
+        // Calculate the dot product between the camera direction and the test vector
+        const dotProduct = cameraDirection.dot(hoveredObjectWorldDirection)
+        const isObjectFacingCamera = dotProduct <= 0
+        if (!isObjectFacingCamera) {
+          const adjustedQuaternion = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI)
+          pointerRef.current.quaternion.multiply(adjustedQuaternion)
         }
       }
     )
