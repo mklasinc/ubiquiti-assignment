@@ -1,5 +1,5 @@
 import { Suspense, useEffect, useRef, useState } from 'react'
-import { useCursor, useTexture } from '@react-three/drei'
+import { useCursor, useTexture, Html } from '@react-three/drei'
 import * as THREE from 'three'
 import { useStore } from '@/store'
 import { Device } from '@/components/Device'
@@ -7,12 +7,16 @@ import type { DeviceData } from '@/store'
 import { DEVICE_SCALE, COLORS } from '@/constants'
 import { useGesture } from '@use-gesture/react'
 import { ThreeEvent, useThree } from '@react-three/fiber'
+import { DeviceItem } from './UI'
+import { noop } from '@/utils/noop'
+import cx from 'clsx'
 
 export function DeviceInstance({ data }: { data: DeviceData }) {
   const ref = useRef<THREE.Group>(null)
 
   const getThree = useThree((state) => state.get)
   const activeDevice = useStore((state) => state.activeDevice)
+  const removeDevice = useStore((state) => state.removeDevice)
   const updateDevice = useStore((state) => state.updateDevice)
   const setActiveDevice = useStore((state) => state.setActiveDevice)
   const isPlacementToolActive = useStore((state) => state.isPlacementToolActive)
@@ -82,6 +86,24 @@ export function DeviceInstance({ data }: { data: DeviceData }) {
 
   return (
     <group ref={ref} name={data.id} {...pointerEvents}>
+      <Html position-y={25} center>
+        <DeviceItem
+          data={data}
+          isActive={false}
+          onClick={noop}
+          onRemove={(e) => {
+            e.stopPropagation()
+            removeDevice(data.id)
+          }}
+          className={cx(
+            'max-w-[250px] bg-white transition-opacity opacity-0 pointer-events-none',
+            isActive && 'opacity-100 pointer-events-auto'
+          )}
+          style={{
+            boxShadow: '0px 4px 30px 0px rgba(170, 166, 166, 0.25)',
+          }}
+        />
+      </Html>
       <Device />
       <mesh position-z={0.1} scale={60}>
         <planeGeometry args={[1, 1]} />

@@ -100,24 +100,30 @@ export const UI = ({ debug = false }: { debug: boolean }) => {
   )
 }
 
-function DeviceItem({
+export function DeviceItem({
   data,
   isActive = false,
   onClick = noop,
   onRemove = noop,
+  style = {},
+  className = '',
 }: {
   data: DeviceData
   onClick: () => void
   isActive: boolean
   onRemove: (event: any) => void
+  style?: React.CSSProperties
+  className?: string
 }) {
   return (
     <div
       onClick={onClick}
       className={cx(
         'flex items-center justify-between my-2 p-2 rounded-md cursor-pointer transition-colors ',
+        className,
         isActive && 'bg-[#9e9e9e]/20'
       )}
+      style={style}
     >
       <div className="flex items-center justify-center overflow-hidden">
         <div className="capitalize font-bold text-xs mr-2">{data.name}</div>
