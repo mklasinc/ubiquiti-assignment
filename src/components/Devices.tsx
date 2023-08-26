@@ -19,7 +19,9 @@ export function DeviceInstance({ data }: { data: DeviceData }) {
   const removeDevice = useStore((state) => state.removeDevice)
   const updateDevice = useStore((state) => state.updateDevice)
   const setActiveDevice = useStore((state) => state.setActiveDevice)
+  const isMovingCamera = useStore((state) => state.isMovingCamera)
   const isPlacementToolActive = useStore((state) => state.isPlacementToolActive)
+  const isDraggingToolActive = useStore((state) => state.isDraggingToolActive)
   const setIsDraggingToolActive = useStore((state) => state.setIsDraggingToolActive)
 
   const isActive = activeDevice?.id === data.id
@@ -67,7 +69,7 @@ export function DeviceInstance({ data }: { data: DeviceData }) {
   const handlePointerOver = () => setHovered(true)
   const handlePointerOut = () => setHovered(false)
   const handlePointerMissed = () => {
-    if (isActive) setActiveDevice(null)
+    if (isActive && !isMovingCamera && !isDraggingToolActive) setActiveDevice(null)
   }
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation()

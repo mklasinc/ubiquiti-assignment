@@ -21,6 +21,8 @@ interface State {
 
   isDraggingToolActive: boolean
   setIsDraggingToolActive: (value: boolean) => void
+  isMovingCamera: boolean
+  setIsMovingCamera: (value: boolean) => void
   isUpdatingSettings: boolean
   setIsUpdatingSettings: (value: boolean) => void
   devices: Array<DeviceData>
@@ -51,6 +53,9 @@ export const useStore = create<State>()(
 
     isDraggingToolActive: false,
     setIsDraggingToolActive: (value: boolean) => set({ isDraggingToolActive: value }),
+
+    isMovingCamera: false,
+    setIsMovingCamera: (value: boolean) => set({ isMovingCamera: value }),
 
     isUpdatingSettings: false,
     setIsUpdatingSettings: (value: boolean) => set({ isUpdatingSettings: value }),

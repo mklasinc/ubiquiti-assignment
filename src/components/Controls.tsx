@@ -8,6 +8,7 @@ export const Controls = () => {
   const get = useThree((state) => state.get)
 
   const isDraggingToolActive = useStore((state) => state.isDraggingToolActive)
+  const setIsMovingCamera = useStore((state) => state.setIsMovingCamera)
   const isUpdatingSettings = useStore((state) => state.isUpdatingSettings)
   const activeDevice = useStore((state) => state.activeDevice)
   const ref = useRef<CameraControls>(null)
@@ -30,6 +31,22 @@ export const Controls = () => {
       ref.current.reset(true)
     }
   }, [activeDevice, scene])
+
+  useEffect(() => {
+    const cameraControls = ref.current
+    if (!cameraControls) return
+
+    const handleControlStart = () => setIsMovingCamera(true)
+    const handleControlEnd = () => setIsMovingCamera(false)
+
+    cameraControls.addEventListener('controlstart', handleControlStart)
+    cameraControls.addEventListener('controlend', handleControlEnd)
+
+    return () => {
+      cameraControls.removeEventListener('controlstart', handleControlStart)
+      cameraControls.removeEventListener('controlend', handleControlEnd)
+    }
+  }, [])
 
   useControls('Camera', {
     'zoom in': button(() => {
