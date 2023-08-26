@@ -54,10 +54,15 @@ export function DeviceInstance({
     },
     onDrag: ({ event, movement: [x, y] }) => {
       event?.stopPropagation()
-      const { viewport } = getThree()
-      const aspect = getThree().size.width / viewport.width
-      ref.current!.position.x = data.position.x + x / aspect
-      ref.current!.position.y = data.position.y - y / aspect
+      const currentViewport = getThree().viewport.getCurrentViewport(
+        undefined,
+        new THREE.Vector3(0, 0, data.position.z)
+      )
+      const aspect = getThree().size.width / currentViewport.width
+      console.log('aspect x', x, x / aspect)
+      ref.current!.position.x = data.position.x + (x / aspect) * 0.3
+      ref.current!.position.y = data.position.y - (y / aspect) * 0.3
+      // console.log('dragging', x, y, getThree().size.width, viewport.width)
     },
   })
 
