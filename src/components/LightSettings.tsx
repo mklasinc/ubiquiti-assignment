@@ -1,4 +1,9 @@
-import { AMBIENT_LIGHT_DEFAULT_COLOR, AMBIENT_LIGHT_DEFAULT_INTENSITY, ENV_MAP_DEFAULT_INTENSITY } from '@/constants'
+import {
+  AMBIENT_LIGHT_DEFAULT_COLOR,
+  AMBIENT_LIGHT_DEFAULT_INTENSITY,
+  ENV_MAP_DEFAULT_INTENSITY,
+  LAYERS,
+} from '@/constants'
 import { useStore } from '@/store'
 import { useThree } from '@react-three/fiber'
 import { useControls } from 'leva'
@@ -25,7 +30,7 @@ export const LightSettings = () => {
         debouncedSetIsUpdatingSettings(false)
 
         const scene = get().scene
-        const floorplan = scene.getObjectByName('Floorplan') as THREE.Group
+        const floorplan = scene.getObjectByName(LAYERS.FLOOORPLAN) as THREE.Group
 
         if (!floorplan) return
 
