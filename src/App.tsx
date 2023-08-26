@@ -40,7 +40,7 @@ function App() {
         />
       </Canvas>
 
-      <UI />
+      <UI debug={false} />
     </div>
   )
 }

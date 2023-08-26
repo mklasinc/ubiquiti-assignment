@@ -1,5 +1,5 @@
 import { Suspense, useEffect, useRef, useState } from 'react'
-import { useCursor, useGLTF, useTexture } from '@react-three/drei'
+import { useCursor, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 import { useStore } from '@/store'
 import { Device } from '@/components/Device'
@@ -98,16 +98,13 @@ export function DeviceInstance({
 }
 
 export function Devices({ data }: { data: DeviceData[] }) {
-  // @ts-ignore
-  const { nodes, materials } = useGLTF('/device.glb')
   const removeDevice = useStore((state) => state.removeDevice)
   const isPlacementToolActive = useStore((state) => state.isPlacementToolActive)
 
   return (
-    // <Instances range={data.length} material={materials.base} geometry={nodes.Scene}>
     <Suspense fallback={null}>
       <group position={[0, 0, 0]}>
-        {data.map((device, i) => (
+        {data.map((device) => (
           <DeviceInstance
             key={device.id}
             data={device}
@@ -116,16 +113,8 @@ export function Devices({ data }: { data: DeviceData[] }) {
               removeDevice(device.id)
             }}
           />
-          // <group key={device.id} matrixWorld={device.matrix} matrixAutoUpdate={false}>
-          //   {/* <Instance /> */}
-          //   <Device />
-          //   {/* <mesh>
-          //     <boxGeometry args={[0.3, 0.3, 0.3]} />
-          //   </mesh> */}
-          // </group>
         ))}
       </group>
     </Suspense>
-    // </Instances>
   )
 }
