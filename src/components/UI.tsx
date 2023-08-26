@@ -116,7 +116,7 @@ function DeviceItem({
       onClick={onClick}
       className={cx(
         'flex items-center justify-between my-2 p-2 rounded-md bg-transparent cursor-pointer transition-colors ',
-        isActive && 'bg-[#9e9e9e]/10'
+        isActive && 'bg-[#9e9e9e]/20'
       )}
     >
       <div className="flex items-center justify-center overflow-hidden">
