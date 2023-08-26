@@ -2,15 +2,13 @@ import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { useStore } from '@/store'
 import { Device } from './Device'
-import { DEVICE_SCALE, LAYERS } from '@/constants'
+import { DEVICE_SCALE, LAYERS, COLORS } from '@/constants'
 import { useTexture } from '@react-three/drei'
 import { ThreeEvent, useThree } from '@react-three/fiber'
 import { v4 as uuidv4 } from 'uuid'
 
-const COLORS = {
-  ACTIVE: new THREE.Color('#82d3f5').multiplyScalar(10),
-  ERROR: new THREE.Color('#FF0000'),
-}
+const COLOR_ACTIVE = new THREE.Color(COLORS.ACTIVE).multiplyScalar(10)
+const COLOR_ERROR = new THREE.Color(COLORS.ERROR)
 
 export function PlacementTool({ debug = false, render }: { debug?: boolean; render?: (props: any) => JSX.Element }) {
   const pointerRef = useRef<any>()
@@ -25,7 +23,7 @@ export function PlacementTool({ debug = false, render }: { debug?: boolean; rend
   const addDevice = useStore((state) => state.addDevice)
   const camera = useThree((state) => state.camera)
 
-  const canPlaceDevice = raycasterTarget?.userData?.type === 'wall'
+  const canPlaceDevice = raycasterTarget?.userData?.type === LAYERS.WALL
 
   const markerTexture = useTexture('/selection-area-marker.png')
 
@@ -121,7 +119,6 @@ export function PlacementTool({ debug = false, render }: { debug?: boolean; rend
         parentWorldMatrix: worldMatrix,
       })
       setIsPlacementToolActive(false)
-      // storeSet({ isPlacementToolActive: false })
     }
   }
 
@@ -131,7 +128,7 @@ export function PlacementTool({ debug = false, render }: { debug?: boolean; rend
         <mesh scale={1}>
           <planeGeometry args={[1, 1]} />
           <meshStandardMaterial
-            color={canPlaceDevice ? COLORS.ACTIVE : COLORS.ERROR}
+            color={canPlaceDevice ? COLOR_ACTIVE : COLOR_ERROR}
             map={markerTexture}
             transparent
             opacity={0.8}

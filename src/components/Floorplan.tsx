@@ -27,7 +27,6 @@ export function FloorPlan(props: JSX.IntrinsicElements['group']) {
 
     for (let i = 0; i < meshesToRemove.length; i++) {
       let obj = meshesToRemove[i]
-
       obj.parent?.remove(obj)
     }
   }, [model])

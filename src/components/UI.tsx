@@ -6,14 +6,14 @@ import { noop } from '@/utils/noop'
 import type { DeviceData } from '@/store'
 
 export const UI = ({ debug = false }: { debug: boolean }) => {
-  const raycasterTarget = useStore((state) => state.raycasterTarget)
-  const setIsPlacementToolActive = useStore((state) => state.setIsPlacementToolActive)
-  const removeDevice = useStore((state) => state.removeDevice)
   const devices = useStore((state) => state.devices)
   const activeDevice = useStore((state) => state.activeDevice)
+  const removeDevice = useStore((state) => state.removeDevice)
   const setActiveDevice = useStore((state) => state.setActiveDevice)
-  const isPlacementToolActive = useStore((state) => state.isPlacementToolActive)
+  const raycasterTarget = useStore((state) => state.raycasterTarget)
   const isDraggingToolActive = useStore((state) => state.isDraggingToolActive)
+  const isPlacementToolActive = useStore((state) => state.isPlacementToolActive)
+  const setIsPlacementToolActive = useStore((state) => state.setIsPlacementToolActive)
 
   return (
     <div className="overlay p-4 w-full h-full absolute top-0 left-0">
@@ -59,7 +59,6 @@ export const UI = ({ debug = false }: { debug: boolean }) => {
               key={device.id}
               data={device}
               onClick={() => {
-                console.log('click', device)
                 setActiveDevice(device)
               }}
               isActive={activeDevice?.id === device.id}
@@ -75,9 +74,7 @@ export const UI = ({ debug = false }: { debug: boolean }) => {
       {debug && (
         <div className="debug-ui text-3xl font-bold underline absolute right-0 top-0 m-4">
           <div>{raycasterTarget ? raycasterTarget?.name : 'Nothing hovered'}</div>
-
           <div>Dragging tool: {isDraggingToolActive ? 'yes' : 'no'}</div>
-          {/* <div>{activeDevice ? activeDevice?.name : 'Nothing active'}</div> */}
         </div>
       )}
 

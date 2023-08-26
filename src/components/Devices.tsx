@@ -4,30 +4,25 @@ import * as THREE from 'three'
 import { useStore } from '@/store'
 import { Device } from '@/components/Device'
 import type { DeviceData } from '@/store'
-import { DEVICE_SCALE } from '@/constants'
+import { DEVICE_SCALE, COLORS } from '@/constants'
 import { useGesture } from '@use-gesture/react'
 import { ThreeEvent, useThree } from '@react-three/fiber'
 
-export function DeviceInstance({
-  data,
-  interactable = false,
-}: {
-  data: DeviceData
-  interactable?: boolean
-  onClick?: () => void
-}) {
+export function DeviceInstance({ data }: { data: DeviceData }) {
   const ref = useRef<THREE.Group>(null)
-  const [hovered, setHovered] = useState(false)
 
-  const updateDevice = useStore((state) => state.updateDevice)
   const getThree = useThree((state) => state.get)
-  const setActiveDevice = useStore((state) => state.setActiveDevice)
   const activeDevice = useStore((state) => state.activeDevice)
+  const updateDevice = useStore((state) => state.updateDevice)
+  const setActiveDevice = useStore((state) => state.setActiveDevice)
+  const isPlacementToolActive = useStore((state) => state.isPlacementToolActive)
   const setIsDraggingToolActive = useStore((state) => state.setIsDraggingToolActive)
 
   const isActive = activeDevice?.id === data.id
+  const isInteractable = !isPlacementToolActive
 
-  useCursor(hovered && interactable)
+  const [hovered, setHovered] = useState(false)
+  useCursor(hovered && isInteractable)
 
   useEffect(() => {
     if (!ref.current) return
@@ -47,9 +42,7 @@ export function DeviceInstance({
       setIsDraggingToolActive(false)
 
       if (!ref.current) return
-      updateDevice(data.id, {
-        position: ref.current.getWorldPosition(new THREE.Vector3()),
-      })
+      updateDevice(data.id, { position: ref.current.getWorldPosition(new THREE.Vector3()) })
     },
     onDrag: ({ event, movement: [x, y] }) => {
       event?.stopPropagation()
@@ -58,13 +51,14 @@ export function DeviceInstance({
         new THREE.Vector3(0, 0, data.position.z)
       )
       const aspect = getThree().size.width / currentViewport.width
+      // TODO: Fix DOM/3D offset sync
       ref.current!.position.x = data.position.x + (x / aspect) * 0.3
       ref.current!.position.y = data.position.y - (y / aspect) * 0.3
     },
   })
 
   const glowTexture = useTexture('/glow.png')
-  const color = new THREE.Color('#82d3f5').multiplyScalar(30)
+  const color = new THREE.Color(COLORS.ACTIVE).multiplyScalar(30)
 
   const handlePointerOver = () => setHovered(true)
   const handlePointerOut = () => setHovered(false)
@@ -76,7 +70,7 @@ export function DeviceInstance({
     setActiveDevice(data)
   }
 
-  const pointerEvents = interactable
+  const pointerEvents = isInteractable
     ? {
         ...(bind() as any),
         onPointerOver: handlePointerOver,
@@ -98,21 +92,11 @@ export function DeviceInstance({
 }
 
 export function Devices({ data }: { data: DeviceData[] }) {
-  const removeDevice = useStore((state) => state.removeDevice)
-  const isPlacementToolActive = useStore((state) => state.isPlacementToolActive)
-
   return (
     <Suspense fallback={null}>
       <group position={[0, 0, 0]}>
         {data.map((device) => (
-          <DeviceInstance
-            key={device.id}
-            data={device}
-            interactable={!isPlacementToolActive}
-            onClick={() => {
-              removeDevice(device.id)
-            }}
-          />
+          <DeviceInstance key={device.id} data={device} />
         ))}
       </group>
     </Suspense>

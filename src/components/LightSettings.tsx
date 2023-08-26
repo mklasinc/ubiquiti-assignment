@@ -14,6 +14,10 @@ export const LightSettings = () => {
   const get = useThree((state) => state.get)
   const setIsUpdatingSettings = useStore((state) => state.setIsUpdatingSettings)
 
+  /*
+   * Debounce the setIsUpdatingSettings call to prevent the UI slider dragging from orbiting the camera
+   * Normally you would prevent the event from bubbling up to the canvas, but the Leva GUI onChange DOM events are not exposed
+   */
   const debouncedSetIsUpdatingSettings = useDebouncedCallback((value: boolean) => {
     setIsUpdatingSettings(value)
   }, 200)
@@ -56,7 +60,7 @@ export const LightSettings = () => {
         debouncedSetIsUpdatingSettings(false)
 
         const scene = get().scene
-        const ambientLight = scene.getObjectByName('Ambient') as THREE.AmbientLight
+        const ambientLight = scene.getObjectByName(LAYERS.AMBIENT_LIGHT) as THREE.AmbientLight
 
         if (!ambientLight) return
 
@@ -67,7 +71,7 @@ export const LightSettings = () => {
       value: AMBIENT_LIGHT_DEFAULT_COLOR,
       onChange: (value) => {
         const scene = get().scene
-        const ambientLight = scene.getObjectByName('Ambient') as THREE.AmbientLight
+        const ambientLight = scene.getObjectByName(LAYERS.AMBIENT_LIGHT) as THREE.AmbientLight
 
         if (!ambientLight) return
 
