@@ -21,10 +21,10 @@ export function DeviceInstance({
   const [hovered, setHovered] = useState(false)
 
   const updateDevice = useStore((state) => state.updateDevice)
-  const storeSet = useStore((state) => state.set)
-  const storeGet = useStore((state) => state.get)
+  const getThree = useThree((state) => state.get)
   const setActiveDevice = useStore((state) => state.setActiveDevice)
   const activeDevice = useStore((state) => state.activeDevice)
+  const setIsDraggingToolActive = useStore((state) => state.setIsDraggingToolActive)
 
   const isActive = activeDevice?.id === data.id
 
@@ -39,16 +39,25 @@ export function DeviceInstance({
   }, [data])
 
   const bind = useGesture({
-    onDragStart: () => storeSet({ isDraggingToolActive: true }),
-    onDragEnd: () => {
+    onDragStart: ({ event }) => {
+      event.stopPropagation()
+      setIsDraggingToolActive(true)
+    },
+    onDragEnd: ({ event }) => {
+      event.stopPropagation()
+      setIsDraggingToolActive(false)
+
       if (!ref.current) return
-      storeSet({ isDraggingToolActive: false })
       updateDevice(data.id, {
-        position: storeGet().hoveredPosition as THREE.Vector3,
+        position: ref.current.getWorldPosition(new THREE.Vector3()),
       })
     },
-    onDrag: () => {
-      ref.current?.position.copy(storeGet().hoveredPosition!)
+    onDrag: ({ event, movement: [x, y] }) => {
+      event?.stopPropagation()
+      const { viewport } = getThree()
+      const aspect = getThree().size.width / viewport.width
+      ref.current!.position.x = data.position.x + x / aspect
+      ref.current!.position.y = data.position.y - y / aspect
     },
   })
 
@@ -56,7 +65,7 @@ export function DeviceInstance({
     <group
       ref={ref}
       name={data.id}
-      // {...(bind() as any)}
+      {...(bind() as any)}
       onPointerOver={(e) => setHovered(true)}
       onPointerOut={(e) => setHovered(false)}
       onPointerMissed={(e) => {

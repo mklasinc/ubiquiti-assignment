@@ -4,7 +4,6 @@ import { TrashIcon } from '@heroicons/react/24/outline'
 import { Leva } from 'leva'
 import { noop } from '@/utils/noop'
 import type { DeviceData } from '@/store'
-import type { MouseEventHandler } from 'react'
 
 export const UI = () => {
   const hovered = useStore((state) => state.hovered)
@@ -14,6 +13,7 @@ export const UI = () => {
   const activeDevice = useStore((state) => state.activeDevice)
   const setActiveDevice = useStore((state) => state.setActiveDevice)
   const isPlacementToolActive = useStore((state) => state.isPlacementToolActive)
+  const isDraggingToolActive = useStore((state) => state.isDraggingToolActive)
 
   return (
     <div className="overlay p-4 w-full h-full absolute top-0 left-0">
@@ -73,7 +73,9 @@ export const UI = () => {
 
       <div className="text-3xl font-bold underline absolute right-0 top-0 m-4">
         <div>{hovered ? hovered?.name : 'Nothing hovered'}</div>
-        <div>{activeDevice ? activeDevice?.name : 'Nothing active'}</div>
+
+        <div>Dragging tool: {isDraggingToolActive ? 'yes' : 'no'}</div>
+        {/* <div>{activeDevice ? activeDevice?.name : 'Nothing active'}</div> */}
       </div>
       <div
         className="placement-tool cursor-pointer absolute bottom-4 left-[50%] translate-x-[-50%] w-[64px] h-[64px] bg-white rounded-2xl p-2"
