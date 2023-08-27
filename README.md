@@ -2,6 +2,13 @@
 
 This repository contains the code for Ubiquiti's 3D Fullstack Web Developer assignment.
 
+## Run the repository
+
+```
+npm install
+npm run dev
+```
+
 ## Features
 
 The project features a 3D view of an office floorplan, a Wi-Fi device placement tool docked in the bottom of the screen, and a side panel with settings and a list of Wi-Fi devices placed around the 3D scene.
